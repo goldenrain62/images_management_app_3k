@@ -1,7 +1,9 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import dbConnect from "@/lib/mongodb"; // Your MongoDB connection utility
-import User from "@/models/User"; // Your User model
+import { db } from "@/db";
+import { users, roles } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,28 +19,36 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          // Connect to database
-          await dbConnect();
+          // Find user by email with role join
+          const result = await db
+            .select({
+              id: users.id,
+              email: users.email,
+              password: users.password,
+              name: users.name,
+              isActive: users.isActive,
+              roleName: roles.name,
+            })
+            .from(users)
+            .leftJoin(roles, eq(users.roleId, roles.id))
+            .where(eq(users.email, credentials.email))
+            .limit(1);
 
-          // Find user by email and populate role
-          const user = await User.findOne({ email: credentials.email })
-            .populate("role")
-            .lean();
+          const user = result[0];
 
           if (!user) {
             throw new Error("Email hoặc mật khẩu không đúng");
           }
 
           // Check if user is active
-          if (user.isActive === 0) {
+          if (!user.isActive) {
             throw new Error("Tài khoản đã bị vô hiệu hóa");
           }
 
           // Verify password
-          // Note: You'll need to get the non-lean document to use methods
-          const userDoc = await User.findOne({ email: credentials.email });
-          const isPasswordValid = await userDoc.comparePassword(
+          const isPasswordValid = await bcrypt.compare(
             credentials.password,
+            user.password,
           );
 
           if (!isPasswordValid) {
@@ -47,10 +57,10 @@ export const authOptions: NextAuthOptions = {
 
           // Return user object (will be stored in JWT)
           return {
-            id: user._id.toString(),
+            id: user.id.toString(),
             email: user.email,
             name: user.name,
-            role: user.role.name, // Include role info
+            role: user.roleName,
             isActive: user.isActive,
           };
         } catch (error: any) {
@@ -67,13 +77,13 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     // JWT callback: runs when JWT is created or updated
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, user }) {
       // On sign in, add user data to token
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.role = user.role.name;
+        token.role = user.role;
         token.isActive = user.isActive;
       }
 
@@ -88,7 +98,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email as string;
         session.user.name = token.name as string;
         session.user.role = token.role as any;
-        session.user.isActive = token.isActive as number;
+        session.user.isActive = token.isActive as boolean;
       }
 
       return session;

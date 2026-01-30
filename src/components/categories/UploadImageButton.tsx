@@ -3,7 +3,10 @@
 import { useTheme } from "@/context/ThemeContext";
 import { Plus } from "lucide-react";
 import { useRef, useState } from "react";
-import { UploadImageButtonProps } from "@/types";
+interface UploadImageButtonProps {
+  categoryId: string;
+  onUploadSuccess: () => void;
+}
 
 const UploadImageButton = ({
   categoryId,

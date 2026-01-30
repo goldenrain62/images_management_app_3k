@@ -8,9 +8,10 @@ import {
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { Plus } from "lucide-react";
-import { createPortal } from "react-dom";
-import { CreateCategoryProps } from "@/types/index";
-import { on } from "events";
+
+interface CreateCategoryProps {
+  onSuccess: () => void;
+}
 
 const CreateCategoryButton = ({ onSuccess }: CreateCategoryProps) => {
   const { theme } = useTheme();
@@ -18,7 +19,7 @@ const CreateCategoryButton = ({ onSuccess }: CreateCategoryProps) => {
   const [name, setName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleCreate = async () => {
     if (!name.trim()) return;

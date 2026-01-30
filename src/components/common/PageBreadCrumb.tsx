@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { BreadcrumbProps } from "@/types";
+interface BreadcrumbProps {
+  pageTitle: string;
+  subPageTitle?: string;
+}
 
 const PageBreadcrumb = ({ pageTitle, subPageTitle }: BreadcrumbProps) => {
   return (

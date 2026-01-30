@@ -3,12 +3,20 @@
 import { useEffect, useState, useCallback } from "react";
 import { FolderMinus, Wrench, Trash2, Plus } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
-import { CategoryProps } from "@/types/index";
 import Blank from "@/components/common/Blank";
 import CreateCategoryButton from "@/components/categories/CreateCategoryButton";
 import Link from "next/link";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+
+interface CategoryProps {
+  id: string;
+  name: string;
+  images_qty: number;
+  size: number;
+  createDate: string;
+  creator: string;
+}
 
 const CategoriesPage = () => {
   const { theme } = useTheme();

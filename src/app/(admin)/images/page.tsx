@@ -10,7 +10,7 @@ const ImagePage = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [images, setImages] = useState<ImageProps[]>([
     {
-      id: 1,
+      id: "1",
       name: "Sàn Gỗ ShopHouse SH118",
       size: "2.4 MB",
       uploadDate: "2024-01-15",
@@ -18,7 +18,7 @@ const ImagePage = () => {
       thumbnailUrl: "https://myspace.3khome.vn/thumbnail/san-go-shop-house-SH118-300x300.jpg",
     },
     {
-      id: 2,
+      id: "2",
       name: "Sàn Gỗ ShopHouse SH300+28",
       size: "3.1 MB",
       uploadDate: "2024-01-14",
@@ -26,7 +26,7 @@ const ImagePage = () => {
       thumbnailUrl: "https://myspace.3khome.vn/thumbnail/san-go-shophouse12mm-SH300-28-300x300.jpg",
     },
     {
-      id: 3,
+      id: "3",
       name: "Sàn Gỗ Nam Việt F8+18",
       size: "1.8 MB",
       uploadDate: "2024-01-13",
@@ -34,7 +34,7 @@ const ImagePage = () => {
       thumbnailUrl: "https://myspace.3khome.vn/thumbnail/san-go-f8-nam-viet-f8-18-300x300.jpg",
     },
     {
-      id: 4,
+      id: "4",
       name: "Sàn Gỗ Nam Việt F12-65",
       size: "4.2 MB",
       uploadDate: "2024-01-12",
@@ -42,7 +42,7 @@ const ImagePage = () => {
       thumbnailUrl: "https://myspace.3khome.vn/thumbnail/F12-NamViet-65-300x300.jpg",
     },
     {
-      id: 5,
+      id: "5",
       name: "Sàn Gỗ 3K Vina V8880",
       size: "2.9 MB",
       uploadDate: "2024-01-11",
@@ -50,7 +50,7 @@ const ImagePage = () => {
       thumbnailUrl: "https://myspace.3khome.vn/thumbnail/san-go-cong-nghiep-3k-vina-V8880-300x300.jpg",
     },
     {
-      id: 6,
+      id: "6",
       name: "Sàn Gỗ 3K Art Xương Cá Z8+88",
       size: "3.5 MB",
       uploadDate: "2024-01-10",

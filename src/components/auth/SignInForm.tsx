@@ -25,12 +25,16 @@ export default function SignInForm() {
     setError("");
     setIsLoading(true);
 
+    console.log("Attempting login with:", email);
+
     try {
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false, // Don't redirect automatically
       });
+
+      console.log("Login result:", result);
 
       if (result?.error) {
         setError(result.error);
@@ -39,11 +43,17 @@ export default function SignInForm() {
       }
 
       if (result?.ok) {
+        console.log("Login successful, redirecting...");
+        setIsLoading(false);
         // Redirect to dashboard or home page
         router.push("/");
         router.refresh(); // Refresh to update session
+      } else {
+        setError("Đăng nhập thất bại. Vui lòng thử lại.");
+        setIsLoading(false);
       }
     } catch (err: any) {
+      console.error("Login error:", err);
       setError("Đã xảy ra lỗi. Vui lòng thử lại.");
       setIsLoading(false);
     }
@@ -63,6 +73,11 @@ export default function SignInForm() {
           </div>
           <div>
             <form>
+              {error && (
+                <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
+                  {error}
+                </div>
+              )}
               <div className="space-y-6">
                 <div>
                   <Label>
@@ -117,8 +132,13 @@ export default function SignInForm() {
                   </Link>
                 </div>
                 <div>
-                  <Button className="w-full" size="sm" onClick={handleSignIn}>
-                    Sign in
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    onClick={handleSignIn}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Đang đăng nhập..." : "Sign in"}
                   </Button>
                 </div>
               </div>
