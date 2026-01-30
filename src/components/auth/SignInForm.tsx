@@ -23,9 +23,14 @@ export default function SignInForm() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true);
 
-    console.log("Attempting login with:", email);
+    // Validate inputs
+    if (!email || !password) {
+      setError("Vui lòng nhập đầy đủ email và mật khẩu");
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       const result = await signIn("credentials", {
@@ -34,18 +39,15 @@ export default function SignInForm() {
         redirect: false, // Don't redirect automatically
       });
 
-      console.log("Login result:", result);
-
       if (result?.error) {
+        // Display error message from server
         setError(result.error);
         setIsLoading(false);
         return;
       }
 
       if (result?.ok) {
-        console.log("Login successful, redirecting...");
-        setIsLoading(false);
-        // Redirect to dashboard or home page
+        // Successful login - redirect to home page
         router.push("/");
         router.refresh(); // Refresh to update session
       } else {
@@ -72,7 +74,7 @@ export default function SignInForm() {
             </p>
           </div>
           <div>
-            <form>
+            <form onSubmit={handleSignIn}>
               {error && (
                 <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
                   {error}
@@ -88,8 +90,12 @@ export default function SignInForm() {
                     name="email"
                     type="email"
                     placeholder="info@gmail.com"
-                    value={email} // Use value instead of defaultValue
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setError(""); // Clear error when typing
+                    }}
+                    required
                   />
                 </div>
                 <div>
@@ -102,8 +108,12 @@ export default function SignInForm() {
                       name="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Nhập mật khẩu"
-                      value={password} // Use value instead of defaultValue
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setError(""); // Clear error when typing
+                      }}
+                      required
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -135,7 +145,7 @@ export default function SignInForm() {
                   <Button
                     className="w-full"
                     size="sm"
-                    onClick={handleSignIn}
+                    type="submit"
                     disabled={isLoading}
                   >
                     {isLoading ? "Đang đăng nhập..." : "Sign in"}

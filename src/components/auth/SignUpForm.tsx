@@ -9,6 +9,7 @@ import React, { useState } from "react";
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full overflow-y-auto no-scrollbar">
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
@@ -27,12 +28,16 @@ export default function SignUpForm() {
               Sign Up
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your email and password to sign up!
+              This feature is not available yet.
             </p>
           </div>
           <div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
-              <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 opacity-50 cursor-not-allowed dark:bg-white/5 dark:text-white/90"
+              >
                 <svg
                   width="20"
                   height="20"
@@ -59,7 +64,11 @@ export default function SignUpForm() {
                 </svg>
                 Sign up with Google
               </button>
-              <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 opacity-50 cursor-not-allowed dark:bg-white/5 dark:text-white/90"
+              >
                 <svg
                   width="21"
                   className="fill-current"
@@ -86,7 +95,6 @@ export default function SignUpForm() {
             <form>
               <div className="space-y-5">
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  {/* <!-- First Name --> */}
                   <div className="sm:col-span-1">
                     <Label>
                       First Name<span className="text-error-500">*</span>
@@ -96,9 +104,9 @@ export default function SignUpForm() {
                       id="fname"
                       name="fname"
                       placeholder="Enter your first name"
+                      disabled
                     />
                   </div>
-                  {/* <!-- Last Name --> */}
                   <div className="sm:col-span-1">
                     <Label>
                       Last Name<span className="text-error-500">*</span>
@@ -108,10 +116,10 @@ export default function SignUpForm() {
                       id="lname"
                       name="lname"
                       placeholder="Enter your last name"
+                      disabled
                     />
                   </div>
                 </div>
-                {/* <!-- Email --> */}
                 <div>
                   <Label>
                     Email<span className="text-error-500">*</span>
@@ -121,9 +129,9 @@ export default function SignUpForm() {
                     id="email"
                     name="email"
                     placeholder="Enter your email"
+                    disabled
                   />
                 </div>
-                {/* <!-- Password --> */}
                 <div>
                   <Label>
                     Password<span className="text-error-500">*</span>
@@ -132,6 +140,7 @@ export default function SignUpForm() {
                     <Input
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
+                      disabled
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -145,12 +154,12 @@ export default function SignUpForm() {
                     </span>
                   </div>
                 </div>
-                {/* <!-- Checkbox --> */}
                 <div className="flex items-center gap-3">
                   <Checkbox
                     className="w-5 h-5"
                     checked={isChecked}
                     onChange={setIsChecked}
+                    disabled
                   />
                   <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
                     By creating an account means you agree to the{" "}
@@ -163,10 +172,13 @@ export default function SignUpForm() {
                     </span>
                   </p>
                 </div>
-                {/* <!-- Button --> */}
                 <div>
-                  <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
-                    Sign Up
+                  <button
+                    type="button"
+                    disabled
+                    className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs opacity-50 cursor-not-allowed"
+                  >
+                    Sign Up (Not Available)
                   </button>
                 </div>
               </div>
@@ -174,7 +186,7 @@ export default function SignUpForm() {
 
             <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                Already have an account?
+                Already have an account?{" "}
                 <Link
                   href="/signin"
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
