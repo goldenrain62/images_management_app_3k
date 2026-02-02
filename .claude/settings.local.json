@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(npx drizzle-kit push:*)",
+      "Bash(mysql:*)",
+      "Bash(npm run dev:*)"
+    ]
+  }
+}

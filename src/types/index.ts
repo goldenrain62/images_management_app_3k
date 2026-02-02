@@ -4,19 +4,8 @@ export interface ImageProps {
   size: string;
   uploadDate: string;
   uploader: string;
+  imageUrl: string;
   thumbnailUrl: string;
+  categoryId?: string;
+  categoryName?: string;
 }
-
-// export interface ImageItem {
-//   id: string;
-//   name: string;
-//   productUrl: string;
-//   imageUrl: string;
-//   thumbnailUrl: string;
-// }
-
-// export interface CategoryDetail {
-//   id: string;
-//   name: string;
-//   images: ImageItem[];
-// }

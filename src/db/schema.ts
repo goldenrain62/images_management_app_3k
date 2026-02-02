@@ -8,7 +8,6 @@ import {
   int,
   date,
 } from "drizzle-orm/mysql-core";
-import { sql } from "drizzle-orm";
 
 // --- Role Table ---
 export const roles = mysqlTable("roles", {
@@ -30,36 +29,36 @@ export const users = mysqlTable("users", {
   isActive: boolean("is_active").default(true).notNull(),
   roleId: int("role_id")
     .notNull()
-    .references(() => roles.id),
+    .references(() => roles.id, { onDelete: "restrict" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
 // --- Category Table ---
 export const categories = mysqlTable("categories", {
-  id: varchar("id", { length: 255 }).primaryKey(), // Using String PK as requested
+  id: varchar("id", { length: 6 }).primaryKey(), // Using String PK as requested
   name: varchar("name", { length: 255 }).notNull().unique(),
   description: text("description"),
-  imagesQty: int("images_qty").default(0).notNull(),
-  size: int("size").default(0).notNull(),
   userId: int("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: "restrict" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
 // --- Image Table ---
 export const images = mysqlTable("images", {
-  id: varchar("id", { length: 255 }).primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
+  id: varchar("id", { length: 15 }).primaryKey(),
+  name: varchar("name", { length: 150 }).notNull(),
   size: int("size").notNull(),
   productUrl: text("product_url"),
   imageUrl: text("image_url"),
   thumbnailUrl: text("thumbnail_url"),
-  categoryId: varchar("category_id", { length: 255 })
+  categoryId: varchar("category_id", { length: 6 })
     .notNull()
-    .references(() => categories.id),
+    .references(() => categories.id, { onDelete: "cascade" }),
   userId: int("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: "restrict" }),
   uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
 });

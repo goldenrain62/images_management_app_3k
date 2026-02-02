@@ -1,10 +1,11 @@
 import Link from "next/link";
 interface BreadcrumbProps {
   pageTitle: string;
+  pageTitleNav: string;
   subPageTitle?: string;
 }
 
-const PageBreadcrumb = ({ pageTitle, subPageTitle }: BreadcrumbProps) => {
+const PageBreadcrumb = ({ pageTitle, pageTitleNav, subPageTitle }: BreadcrumbProps) => {
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
       <h2
@@ -43,7 +44,7 @@ const PageBreadcrumb = ({ pageTitle, subPageTitle }: BreadcrumbProps) => {
           <li>
             <Link
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-800 dark:text-white/90"
-              href="/categories"
+              href={`/${pageTitleNav}`}
             >
               {pageTitle}
             </Link>

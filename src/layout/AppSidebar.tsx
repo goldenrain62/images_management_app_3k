@@ -17,7 +17,7 @@ import {
   TableIcon,
   UserCircleIcon,
 } from "../icons/index";
-import { Image as ImageIcon, ChartBarStacked } from "lucide-react";
+import { Image as ImageIcon, ChartBarStacked, Users } from "lucide-react";
 import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
@@ -30,13 +30,18 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     icon: <ImageIcon />,
-    name: "Images",
+    name: "Ảnh",
     path: "/images",
   },
   {
     icon: <ChartBarStacked />,
-    name: "Categories",
+    name: "Bộ sưu tập",
     path: "/categories",
+  },
+  {
+    icon: <Users />,
+    name: "Tài khoản",
+    path: "/users",
   },
   {
     icon: <GridIcon />,
@@ -91,7 +96,7 @@ const othersItems: NavItem[] = [
       { name: "Avatar", path: "/avatars", pro: false },
       { name: "Badge", path: "/badge", pro: false },
       { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
+      { name: "Images2", path: "/images2", pro: false },
       { name: "Videos", path: "/videos", pro: false },
     ],
   },
