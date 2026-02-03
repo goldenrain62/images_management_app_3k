@@ -27,6 +27,7 @@ export const authOptions: NextAuthOptions = {
               password: users.password,
               name: users.name,
               isActive: users.isActive,
+              gender: users.gender,
               roleName: roles.name,
             })
             .from(users)
@@ -62,6 +63,7 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             role: user.roleName,
             isActive: user.isActive,
+            gender: user.gender,
           };
         } catch (error: any) {
           throw new Error(error.message || "Đăng nhập thất bại");
@@ -85,6 +87,7 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.role = user.role;
         token.isActive = user.isActive;
+        token.gender = user.gender;
       }
 
       return token;
@@ -99,6 +102,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name as string;
         session.user.role = token.role as any;
         session.user.isActive = token.isActive as boolean;
+        session.user.gender = token.gender as boolean | null;
       }
 
       return session;

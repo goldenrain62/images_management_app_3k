@@ -20,24 +20,15 @@ async function generateImageId(categoryId: string): Promise<string> {
   return `${categoryId}_${count.toString().padStart(6, "0")}`;
 }
 
-// GET - Get all images for a category
+// GET - Get all images for a category (Public - No auth required)
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { error: "Không có quyền truy cập. Vui lòng đăng nhập." },
-        { status: 401 },
-      );
-    }
-
     const { id: categoryId } = await params;
 
-    // Check if category exists and user owns it
+    // Check if category exists
     const category = await db
       .select()
       .from(categories)
@@ -51,14 +42,7 @@ export async function GET(
       );
     }
 
-    if (category[0].userId !== parseInt(session.user.id)) {
-      return NextResponse.json(
-        { error: "Bạn không có quyền truy cập loại sàn này" },
-        { status: 403 },
-      );
-    }
-
-    // Fetch all images for this category with uploader info
+    // Fetch all images for this category
     const categoryImages = await db
       .select({
         id: images.id,
@@ -68,11 +52,8 @@ export async function GET(
         imageUrl: images.imageUrl,
         thumbnailUrl: images.thumbnailUrl,
         createdAt: images.uploadedAt,
-        uploaderName: users.name,
-        uploaderEmail: users.email,
       })
       .from(images)
-      .leftJoin(users, eq(images.userId, users.id))
       .where(eq(images.categoryId, categoryId));
 
     // Format response
@@ -84,15 +65,11 @@ export async function GET(
       imageUrl: img.imageUrl,
       thumbnailUrl: img.thumbnailUrl,
       createdAt: img.createdAt,
-      uploader: {
-        name: img.uploaderName,
-        email: img.uploaderEmail,
-      },
     }));
 
     return NextResponse.json(
       {
-        name: category[0].name,
+        categoryName: category[0].name,
         images: formattedImages,
       },
       { status: 200 },
@@ -123,7 +100,7 @@ export async function POST(
 
     const { id: categoryId } = await params;
 
-    // Check if category exists and user owns it
+    // Check if category exists
     const category = await db
       .select()
       .from(categories)
@@ -137,7 +114,12 @@ export async function POST(
       );
     }
 
-    if (category[0].userId !== parseInt(session.user.id)) {
+    // Check permissions: Admin can upload to any category, users can only upload to their own
+    const currentUserId = parseInt(session.user.id);
+    const isAdmin = session.user.role === "Admin";
+    const isCategoryOwner = category[0].userId === currentUserId;
+
+    if (!isAdmin && !isCategoryOwner) {
       return NextResponse.json(
         { error: "Bạn không có quyền tải ảnh lên loại sàn này" },
         { status: 403 },

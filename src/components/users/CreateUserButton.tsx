@@ -15,7 +15,7 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [gender, setGender] = useState<boolean>(true); // true = male, false = female
+  const [gender, setGender] = useState<boolean>(false); // false (0) = male, true (1) = female
   const [roleId, setRoleId] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,9 +29,13 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
         const response = await fetch("/api/roles");
         const result = await response.json();
         if (response.ok) {
-          setRoles(result.data);
-          if (result.data.length > 0) {
-            setRoleId(result.data[0].id.toString());
+          // Exclude "Admin" role to prevent accidental creation of admin accounts
+          const filteredRoles = result.data.filter(
+            (role: { id: number; name: string }) => role.name !== "Admin"
+          );
+          setRoles(filteredRoles);
+          if (filteredRoles.length > 0) {
+            setRoleId(filteredRoles[0].id.toString());
           }
         }
       } catch (err) {
@@ -82,7 +86,7 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
         setEmail("");
         setPassword("");
         setShowPassword(false);
-        setGender(true);
+        setGender(false);
         setIsActive(true);
         setIsOpen(false);
         onSuccess();
@@ -144,7 +148,7 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
                     theme === "dark" ? "text-gray-300" : "text-gray-700"
                   }`}
                 >
-                  Tên người dùng
+                  Họ tên người dùng
                 </label>
                 <input
                   type="text"
@@ -154,8 +158,8 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
                     theme === "dark"
                       ? "border-gray-600 bg-gray-700 text-white"
                       : "border-gray-300 bg-white text-gray-900"
-                  } focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
-                  placeholder="Nhập tên người dùng"
+                  } focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
+                  placeholder="Nhập họ tên người dùng"
                 />
               </div>
 
@@ -176,7 +180,7 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
                     theme === "dark"
                       ? "border-gray-600 bg-gray-700 text-white"
                       : "border-gray-300 bg-white text-gray-900"
-                  } focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                  } focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
                   placeholder="Nhập email"
                 />
               </div>
@@ -199,13 +203,13 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
                       theme === "dark"
                         ? "border-gray-600 bg-gray-700 text-white"
                         : "border-gray-300 bg-white text-gray-900"
-                    } focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                    } focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
                     placeholder="Nhập mật khẩu"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 ${
+                    className={`absolute top-1/2 right-3 -translate-y-1/2 ${
                       theme === "dark"
                         ? "text-gray-400 hover:text-gray-300"
                         : "text-gray-500 hover:text-gray-700"
@@ -226,12 +230,12 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
                   Giới tính
                 </label>
                 <div className="flex gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  <label className="flex cursor-pointer items-center gap-2">
                     <input
                       type="radio"
                       name="gender"
-                      checked={gender === true}
-                      onChange={() => setGender(true)}
+                      checked={gender === false}
+                      onChange={() => setGender(false)}
                       className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <span
@@ -242,12 +246,12 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
                       Nam
                     </span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  <label className="flex cursor-pointer items-center gap-2">
                     <input
                       type="radio"
                       name="gender"
-                      checked={gender === false}
-                      onChange={() => setGender(false)}
+                      checked={gender === true}
+                      onChange={() => setGender(true)}
                       className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <span
@@ -268,7 +272,7 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
                     theme === "dark" ? "text-gray-300" : "text-gray-700"
                   }`}
                 >
-                  Quyền
+                  Loại tài khoản
                 </label>
                 <select
                   value={roleId}
@@ -277,7 +281,7 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
                     theme === "dark"
                       ? "border-gray-600 bg-gray-700 text-white"
                       : "border-gray-300 bg-white text-gray-900"
-                  } focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                  } focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
                 >
                   {roles.map((role) => (
                     <option key={role.id} value={role.id}>

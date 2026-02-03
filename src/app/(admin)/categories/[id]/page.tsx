@@ -174,35 +174,35 @@ const DetailedCategoryPage = ({
                       theme === "dark" ? "text-gray-300" : "text-gray-500"
                     }`}
                   >
-                    ảnh
+                    Ảnh
                   </th>
                   <th
                     className={`px-6 py-3 text-left text-xs font-medium tracking-wider uppercase ${
                       theme === "dark" ? "text-gray-300" : "text-gray-500"
                     }`}
                   >
-                    kích cỡ tệp
+                    Kích cỡ tệp
                   </th>
                   <th
                     className={`px-6 py-3 text-left text-xs font-medium tracking-wider uppercase ${
                       theme === "dark" ? "text-gray-300" : "text-gray-500"
                     }`}
                   >
-                    ngày tải
+                    Ngày tải lên
                   </th>
                   <th
                     className={`px-6 py-3 text-left text-xs font-medium tracking-wider uppercase ${
                       theme === "dark" ? "text-gray-300" : "text-gray-500"
                     }`}
                   >
-                    người tải
+                    Người tải
                   </th>
                   <th
                     className={`px-6 py-3 text-left text-xs font-medium tracking-wider uppercase ${
                       theme === "dark" ? "text-gray-300" : "text-gray-500"
                     }`}
                   >
-                    thao tác
+                    Thao tác
                   </th>
                 </tr>
               </thead>

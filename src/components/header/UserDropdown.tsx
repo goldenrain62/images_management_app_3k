@@ -17,6 +17,25 @@ export default function UserDropdown() {
     router.push("/signin");
   };
 
+  // Determine avatar based on role and gender
+  const getAvatarSrc = () => {
+    if (session?.user?.role === "Admin") {
+      return "/images/user/3khome-user-default.png";
+    }
+
+    // For non-admin users, use gender
+    if (session?.user?.gender === false) {
+      // Male (gender = 0/false)
+      return "/images/user/user-02.jpg";
+    } else if (session?.user?.gender === true) {
+      // Female (gender = 1/true)
+      return "/images/user/user-04.jpg";
+    }
+
+    // Default fallback
+    return "/images/user/3khome-user-default.png";
+  };
+
 function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.stopPropagation();
   setIsOpen((prev) => !prev);
@@ -35,7 +54,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
           <Image
             width={44}
             height={44}
-            src="/images/user/3khome-user-default.png"
+            src={getAvatarSrc()}
             alt="User"
           />
         </span>
@@ -81,7 +100,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              href="/profile"
+              href={`/users/${session?.user.id}`}
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -106,7 +125,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              href="/profile"
+              href="/coming-soon"
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -131,7 +150,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              href="/profile"
+              href="/coming-soon"
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg

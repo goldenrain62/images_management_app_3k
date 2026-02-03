@@ -115,12 +115,23 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password.trim(), 10);
 
+    // Set avatarUrl based on gender
+    // gender = false (0) = male → user-02.jpg
+    // gender = true (1) = female → user-04.jpg
+    let avatarUrl = null;
+    if (gender === false || gender === 0) {
+      avatarUrl = "/images/user/user-02.jpg";
+    } else if (gender === true || gender === 1) {
+      avatarUrl = "/images/user/user-04.jpg";
+    }
+
     // Create user
     await db.insert(users).values({
       name: name.trim(),
       email: email.trim(),
       password: hashedPassword,
       gender: gender !== undefined ? gender : null,
+      avatarUrl: avatarUrl,
       roleId: roleId,
       isActive: isActive !== undefined ? isActive : true,
     });

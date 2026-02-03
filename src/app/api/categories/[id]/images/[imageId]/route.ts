@@ -46,8 +46,12 @@ export async function DELETE(
       );
     }
 
-    // Check if user owns the image
-    if (image[0].userId !== parseInt(session.user.id)) {
+    // Check permissions: Admin can delete any image, users can only delete their own
+    const currentUserId = parseInt(session.user.id);
+    const isAdmin = session.user.role === "Admin";
+    const isImageOwner = image[0].userId === currentUserId;
+
+    if (!isAdmin && !isImageOwner) {
       return NextResponse.json(
         { error: "Bạn không có quyền xóa ảnh này" },
         { status: 403 }

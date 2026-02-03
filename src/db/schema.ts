@@ -26,6 +26,16 @@ export const users = mysqlTable("users", {
   name: varchar("name", { length: 255 }).notNull(),
   gender: boolean("gender"),
   dateOfBirth: date("date_of_birth"),
+  phoneNumber: varchar("phone_number", { length: 20 }),
+  avatarUrl: varchar("avatar_url", { length: 250 }),
+  facebookUrl: varchar("facebook_url", { length: 250 }),
+  zaloUrl: varchar("zalo_url", { length: 250 }),
+  tiktokUrl: varchar("tiktok_url", { length: 250 }),
+  instagramUrl: varchar("instagram_url", { length: 250 }),
+  address: varchar("address", { length: 250 }),
+  ward: varchar("ward", { length: 100 }),
+  province: varchar("province", { length: 100 }),
+  title: varchar("title", { length: 100 }),
   isActive: boolean("is_active").default(true).notNull(),
   roleId: int("role_id")
     .notNull()

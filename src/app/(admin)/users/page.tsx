@@ -4,7 +4,8 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { useTheme } from "@/context/ThemeContext";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Wrench, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { Eye } from "lucide-react";
 import CreateUserButton from "@/components/users/CreateUserButton";
 import Badge from "@/components/ui/badge/Badge";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
@@ -106,7 +107,7 @@ const UsersPage = () => {
                       theme === "dark" ? "text-gray-300" : "text-gray-500"
                     }`}
                   >
-                    Quyền
+                    Loại tài khoản
                   </th>
                   <th
                     className={`px-6 py-3 text-left text-xs font-medium tracking-wider uppercase ${
@@ -120,15 +121,13 @@ const UsersPage = () => {
                       theme === "dark" ? "text-gray-300" : "text-gray-500"
                     }`}
                   >
-                    Hình ảnh
+                    Ảnh đã tải lên
                   </th>
                   <th
                     className={`px-6 py-3 text-left text-xs font-medium tracking-wider uppercase ${
                       theme === "dark" ? "text-gray-300" : "text-gray-500"
                     }`}
-                  >
-                    Thao tác
-                  </th>
+                  ></th>
                 </tr>
               </thead>
               <tbody
@@ -150,8 +149,8 @@ const UsersPage = () => {
                             user.role === "Admin"
                               ? "/images/user/3khome-user-default.png"
                               : user.gender === false
-                                ? "/images/user/user-04.jpg"
-                                : "/images/user/user-02.jpg"
+                                ? "/images/user/user-02.jpg"
+                                : "/images/user/user-04.jpg"
                           }
                           alt={user.name}
                           className="h-10 w-10 rounded-full object-cover"
@@ -159,7 +158,7 @@ const UsersPage = () => {
                         <div className="ml-4">
                           <div
                             onClick={() => router.push(`/users/${user.id}`)}
-                            className={`text-sm font-medium cursor-pointer hover:underline ${theme === "dark" ? "text-white hover:text-blue-400" : "text-gray-900 hover:text-blue-600"}`}
+                            className={`cursor-pointer text-sm font-medium hover:underline ${theme === "dark" ? "text-white hover:text-blue-400" : "text-gray-900 hover:text-blue-600"}`}
                           >
                             {user.name}
                           </div>
@@ -196,16 +195,12 @@ const UsersPage = () => {
                       {user.images}
                     </td>
                     <td className="px-6 py-4 text-sm whitespace-nowrap">
-                      <button
-                        className={`${theme === "dark" ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-900"} mr-3`}
+                      <Link
+                        href={`/users/${user.id}`}
+                        className={`${theme === "dark" ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-900"} mr-3 inline-block`}
                       >
-                        <Wrench />
-                      </button>
-                      <button
-                        className={`${theme === "dark" ? "text-red-400 hover:text-red-300" : "text-red-600 hover:text-red-900"}`}
-                      >
-                        <Trash2 />
-                      </button>
+                        <Eye />
+                      </Link>
                     </td>
                   </tr>
                 ))}

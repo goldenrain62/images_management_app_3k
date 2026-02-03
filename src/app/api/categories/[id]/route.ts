@@ -46,13 +46,10 @@ export async function GET(
       );
     }
 
-    // Check if user owns this category
-    if (category[0].userId !== parseInt(session.user.id)) {
-      return NextResponse.json(
-        { error: "Bạn không có quyền truy cập loại sàn này" },
-        { status: 403 }
-      );
-    }
+    // All authenticated users can view categories
+    const currentUserId = parseInt(session.user.id);
+    const isAdmin = session.user.role === "Admin";
+    const isOwner = category[0].userId === currentUserId;
 
     return NextResponse.json(
       {
@@ -65,6 +62,9 @@ export async function GET(
         },
         createdAt: category[0].createdAt,
         updatedAt: category[0].updatedAt,
+        isOwner,
+        canEdit: isAdmin || isOwner,
+        canDelete: isAdmin || isOwner,
       },
       { status: 200 }
     );
@@ -118,15 +118,21 @@ export async function PUT(
       );
     }
 
-    if (existingCategory[0].userId !== parseInt(session.user.id)) {
+    // Check permissions: Admin can edit any, users can only edit their own
+    const currentUserId = parseInt(session.user.id);
+    const isAdmin = session.user.role === "Admin";
+    const isOwner = existingCategory[0].userId === currentUserId;
+
+    if (!isAdmin && !isOwner) {
       return NextResponse.json(
         { error: "Bạn không có quyền chỉnh sửa loại sàn này" },
         { status: 403 }
       );
     }
 
-    // Check if new name already exists (if name is being changed)
-    if (name.trim() !== existingCategory[0].name) {
+    // Check if new name already exists (case-insensitive comparison)
+    // Only check for duplicates if the name actually changed (ignoring case)
+    if (name.trim().toLowerCase() !== existingCategory[0].name.toLowerCase()) {
       const duplicateName = await db
         .select()
         .from(categories)
@@ -204,7 +210,12 @@ export async function DELETE(
       );
     }
 
-    if (existingCategory[0].userId !== parseInt(session.user.id)) {
+    // Check permissions: Admin can delete any, users can only delete their own
+    const currentUserId = parseInt(session.user.id);
+    const isAdmin = session.user.role === "Admin";
+    const isOwner = existingCategory[0].userId === currentUserId;
+
+    if (!isAdmin && !isOwner) {
       return NextResponse.json(
         { error: "Bạn không có quyền xóa loại sàn này" },
         { status: 403 }

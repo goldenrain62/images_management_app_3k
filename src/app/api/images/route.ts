@@ -5,7 +5,7 @@ import { db } from "@/db";
 import { images, users, categories } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-// GET - Fetch all images for the authenticated user
+// GET - Fetch all images (visible to all authenticated users)
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Fetch all images for the authenticated user with uploader and category info
+    // Fetch all images with uploader and category info (no user filter - all users can see all images)
     const userImages = await db
       .select({
         id: images.id,
@@ -34,8 +34,7 @@ export async function GET(req: NextRequest) {
       })
       .from(images)
       .leftJoin(users, eq(images.userId, users.id))
-      .leftJoin(categories, eq(images.categoryId, categories.id))
-      .where(eq(images.userId, parseInt(session.user.id)));
+      .leftJoin(categories, eq(images.categoryId, categories.id));
 
     // Format response
     const formattedImages = userImages.map((img) => ({

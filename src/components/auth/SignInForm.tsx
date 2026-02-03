@@ -5,8 +5,8 @@ import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function SignInForm() {
@@ -19,6 +19,14 @@ export default function SignInForm() {
   const [password, setPassword] = useState("");
 
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Redirect authenticated users to /images
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      router.push("/images");
+    }
+  }, [status, session, router]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,7 +146,7 @@ export default function SignInForm() {
                     href="/reset-password"
                     className="text-brand-500 hover:text-brand-600 dark:text-brand-400 text-sm"
                   >
-                    Quên mật khẩu?
+                    Đổi mật khẩu?
                   </Link>
                 </div>
                 <div>

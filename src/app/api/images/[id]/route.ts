@@ -52,20 +52,7 @@ export async function GET(
       );
     }
 
-    // Check if user owns this image
-    const imageData = await db
-      .select({ userId: images.userId })
-      .from(images)
-      .where(eq(images.id, id))
-      .limit(1);
-
-    if (imageData[0].userId !== parseInt(session.user.id)) {
-      return NextResponse.json(
-        { error: "Bạn không có quyền truy cập ảnh này" },
-        { status: 403 }
-      );
-    }
-
+    // All authenticated users can view any image (no ownership check)
     return NextResponse.json(
       {
         id: image[0].id,
@@ -136,7 +123,11 @@ export async function PUT(
       );
     }
 
-    if (existingImage[0].userId !== parseInt(session.user.id)) {
+    // Check permissions: either owner or Admin can edit
+    const isOwner = existingImage[0].userId === parseInt(session.user.id);
+    const isAdmin = session.user.role === "Admin";
+
+    if (!isOwner && !isAdmin) {
       return NextResponse.json(
         { error: "Bạn không có quyền chỉnh sửa ảnh này" },
         { status: 403 }
@@ -269,8 +260,11 @@ export async function DELETE(
       );
     }
 
-    // Check if user owns the image
-    if (image[0].userId !== parseInt(session.user.id)) {
+    // Check permissions: either owner or Admin can delete
+    const isOwner = image[0].userId === parseInt(session.user.id);
+    const isAdmin = session.user.role === "Admin";
+
+    if (!isOwner && !isAdmin) {
       return NextResponse.json(
         { error: "Bạn không có quyền xóa ảnh này" },
         { status: 403 }
