@@ -40,7 +40,6 @@ next-env.d.ts
 # testing api tool
 requests.REST
 
-# claude
-/.claude
+
 
 
