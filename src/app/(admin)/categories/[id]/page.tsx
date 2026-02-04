@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { Eye, Download, Trash2 } from "lucide-react";
 import { ImageProps } from "@/types";
@@ -18,6 +19,7 @@ const DetailedCategoryPage = ({
   params: Promise<{ id: string }>;
 }) => {
   const { theme } = useTheme();
+  const searchParams = useSearchParams();
   const [isloading, setisloading] = useState<boolean>(false);
   const [error, seterror] = useState<string | null>(null);
 
@@ -25,7 +27,7 @@ const DetailedCategoryPage = ({
   const resolvedparams = use(params);
   const categoryid = resolvedparams.id;
 
-  const [categoryname, setcategoryname] = useState<string>("");
+  const [categoryname, setcategoryname] = useState<string>(searchParams.get("name") || "");
   const [images, setimages] = useState<ImageProps[]>([]);
   const [vieweropen, setvieweropen] = useState(false);
   const [viewerindex, setviewerindex] = useState(0);
@@ -43,7 +45,7 @@ const DetailedCategoryPage = ({
         throw new Error(result.error || "không thể tải danh sách ảnh");
       }
 
-      setcategoryname(result.name);
+      setcategoryname(result.categoryName);
 
       const transformeddata: ImageProps[] = result.images.map((item: any) => ({
         id: item.id,

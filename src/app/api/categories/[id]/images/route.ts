@@ -52,8 +52,10 @@ export async function GET(
         imageUrl: images.imageUrl,
         thumbnailUrl: images.thumbnailUrl,
         createdAt: images.uploadedAt,
+        uploaderName: users.name,
       })
       .from(images)
+      .leftJoin(users, eq(images.userId, users.id))
       .where(eq(images.categoryId, categoryId));
 
     // Format response
@@ -65,6 +67,7 @@ export async function GET(
       imageUrl: img.imageUrl,
       thumbnailUrl: img.thumbnailUrl,
       createdAt: img.createdAt,
+      uploader: { name: img.uploaderName },
     }));
 
     return NextResponse.json(

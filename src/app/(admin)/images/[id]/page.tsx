@@ -25,11 +25,7 @@ interface ImageDetail {
   };
 }
 
-const ImageDetailPage = ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+const ImageDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { theme } = useTheme();
   const router = useRouter();
   const resolvedParams = use(params);
@@ -50,7 +46,9 @@ const ImageDetailPage = ({
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Categories for dropdown
-  const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
+  const [categories, setCategories] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
 
   // Fetch image details
   const fetchImageDetails = async () => {
@@ -146,7 +144,7 @@ const ImageDetailPage = ({
 
     // Confirmation dialog
     const confirmed = window.confirm(
-      `Bạn có chắc chắn muốn xóa ảnh "${image.name}"?\n\nHành động này không thể hoàn tác.`
+      `Bạn có chắc chắn muốn xóa ảnh "${image.name}"?\n\nHành động này không thể hoàn tác.`,
     );
 
     if (!confirmed) return;
@@ -246,7 +244,7 @@ const ImageDetailPage = ({
                           theme === "dark"
                             ? "border-gray-600 bg-gray-700 text-white"
                             : "border-gray-300 bg-white text-gray-900"
-                        } focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                        } focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
                       />
                     ) : (
                       <p
@@ -295,7 +293,7 @@ const ImageDetailPage = ({
                           theme === "dark"
                             ? "border-gray-600 bg-gray-700 text-white"
                             : "border-gray-300 bg-white text-gray-900"
-                        } focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                        } focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
                         placeholder="Nhập URL sản phẩm"
                       />
                     ) : (
@@ -319,7 +317,7 @@ const ImageDetailPage = ({
                       URL ảnh
                     </label>
                     <p
-                      className={`break-all rounded-md border px-3 py-2 text-sm ${
+                      className={`rounded-md border px-3 py-2 text-sm break-all ${
                         theme === "dark"
                           ? "border-gray-600 bg-gray-700 text-white"
                           : "border-gray-300 bg-gray-50 text-gray-900"
@@ -337,7 +335,7 @@ const ImageDetailPage = ({
                       URL ảnh thumbnail
                     </label>
                     <p
-                      className={`break-all rounded-md border px-3 py-2 text-sm ${
+                      className={`rounded-md border px-3 py-2 text-sm break-all ${
                         theme === "dark"
                           ? "border-gray-600 bg-gray-700 text-white"
                           : "border-gray-300 bg-gray-50 text-gray-900"
@@ -362,7 +360,7 @@ const ImageDetailPage = ({
                           theme === "dark"
                             ? "border-gray-600 bg-gray-700 text-white"
                             : "border-gray-300 bg-white text-gray-900"
-                        } focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                        } focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
                       >
                         {categories.map((cat) => (
                           <option key={cat.id} value={cat.id}>
@@ -446,6 +444,13 @@ const ImageDetailPage = ({
                   ) : (
                     <div className="flex gap-3">
                       <button
+                        onClick={handleDelete}
+                        disabled={isDeleting}
+                        className="flex-1 rounded-md bg-red-600 px-4 py-2 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+                      >
+                        {isDeleting ? "Đang xóa..." : "Xóa"}
+                      </button>
+                      <button
                         onClick={handleEditClick}
                         disabled={isDeleting}
                         className={`flex-1 rounded-md px-4 py-2 font-medium ${
@@ -455,13 +460,6 @@ const ImageDetailPage = ({
                         } transition-colors disabled:opacity-50`}
                       >
                         Sửa
-                      </button>
-                      <button
-                        onClick={handleDelete}
-                        disabled={isDeleting}
-                        className="flex-1 rounded-md bg-red-600 px-4 py-2 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
-                      >
-                        {isDeleting ? "Đang xóa..." : "Xóa"}
                       </button>
                     </div>
                   )}
