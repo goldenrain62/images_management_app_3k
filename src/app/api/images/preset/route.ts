@@ -11,9 +11,7 @@ export async function GET() {
       .from(images)
       .where(eq(images.categoryId, "000000"));
 
-    const result = rows
-      .map((row) => row.productUrl)
-      .filter((url): url is string => url !== null);
+    const result = rows.map((row) => row.productUrl);
 
     return NextResponse.json(result);
   } catch (error) {
