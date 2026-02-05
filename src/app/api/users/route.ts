@@ -73,6 +73,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (session.user.role !== "Admin") {
+      return NextResponse.json(
+        { error: "Chỉ tài khoản Admin mới có thể tạo tài khoản mới." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { name, email, password, gender, roleId, isActive } = body;
 

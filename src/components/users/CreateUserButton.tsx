@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useTheme } from "@/context/ThemeContext";
 import { Plus, Eye, EyeOff } from "lucide-react";
 
@@ -10,7 +11,9 @@ interface CreateUserButtonProps {
 
 const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
   const { theme } = useTheme();
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [showUnauthorized, setShowUnauthorized] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -104,7 +107,13 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          if (session?.user?.role !== "Admin") {
+            setShowUnauthorized(true);
+          } else {
+            setIsOpen(true);
+          }
+        }}
         className={`flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-medium ${
           theme === "dark"
             ? "bg-blue-600 hover:bg-blue-700"
@@ -114,6 +123,42 @@ const CreateUserButton = ({ onSuccess }: CreateUserButtonProps) => {
         <Plus size={20} className="font-bold" />
         Tạo tài khoản
       </button>
+
+      {/* Unauthorized pop-up */}
+      {showUnauthorized && (
+        <div className="fixed inset-0 z-99991 flex items-center justify-center bg-black/90 backdrop-blur-sm">
+          <div
+            className={`w-full max-w-sm rounded-lg p-6 shadow-lg ${
+              theme === "dark"
+                ? "bg-gray-800/95 backdrop-blur-md"
+                : "bg-white/95 backdrop-blur-md"
+            }`}
+          >
+            <h2
+              className={`mb-2 text-lg font-semibold ${
+                theme === "dark" ? "text-white" : "text-gray-900"
+              }`}
+            >
+              Không có quyền
+            </h2>
+            <p
+              className={`mb-5 text-sm ${
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              }`}
+            >
+              Chỉ tài khoản Admin mới có thể tạo tài khoản mới.
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowUnauthorized(false)}
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isOpen && (
         <div className="fixed inset-0 z-99991 flex items-center justify-center bg-black/90 backdrop-blur-sm">
