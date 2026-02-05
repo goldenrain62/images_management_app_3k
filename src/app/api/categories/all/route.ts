@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { categories, images } from "@/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { eq, ne, asc } from "drizzle-orm";
 
 // GET /api/categories/all — Public, no authentication required
 export async function GET() {
@@ -16,6 +16,7 @@ export async function GET() {
       })
       .from(categories)
       .leftJoin(images, eq(images.categoryId, categories.id))
+      .where(ne(categories.id, "000000"))
       .orderBy(asc(categories.name));
 
     // Group rows by category
