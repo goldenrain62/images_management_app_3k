@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { images } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 // GET /api/images/preset — Public, no authentication required
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const origin = req.nextUrl.origin;
+    const imageBaseUrl = process.env.IMAGE_BASE_URL;
 
     const rows = await db
       .select({ imageUrl: images.imageUrl })
       .from(images)
       .where(eq(images.categoryId, "000000"));
 
-    const result = rows.map((row) => `${origin}${row.imageUrl}`);
+    const result = rows.map((row) => `${imageBaseUrl}${row.imageUrl.replace("/uploads", "")}`);
 
     return NextResponse.json(result);
   } catch (error) {
