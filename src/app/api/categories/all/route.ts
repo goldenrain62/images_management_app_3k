@@ -1,11 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { categories, images } from "@/db/schema";
 import { eq, ne, asc } from "drizzle-orm";
 
 // GET /api/categories/all — Public, no authentication required
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const origin = req.nextUrl.origin;
+
     const rows = await db
       .select({
         categoryName: categories.name,
@@ -32,8 +34,8 @@ export async function GET() {
         map.get(row.categoryName)!.push({
           name: row.imageName,
           productUrl: row.productUrl,
-          imageUrl: row.imageUrl,
-          thumbnailUrl: row.thumbnailUrl,
+          imageUrl: row.imageUrl ? `${origin}${row.imageUrl}` : null,
+          thumbnailUrl: row.thumbnailUrl ? `${origin}${row.thumbnailUrl}` : null,
         });
       }
     }
