@@ -31,6 +31,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder
      */
-    "/((?!signin|signup|reset-password|api/auth|api/categories$|api/categories/all$|api/categories/[^/]+/images$|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!signin|signup|reset-password|api/auth|api/categories$|api/categories/all$|api/categories/[^/]+/images$|api/images/preset$|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
