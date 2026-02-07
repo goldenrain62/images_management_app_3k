@@ -40,6 +40,9 @@ next-env.d.ts
 # testing api tool
 requests.REST
 
+# Unnecessary folders
+.claude/
+
 
 
 

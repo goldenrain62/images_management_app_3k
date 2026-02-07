@@ -28,6 +28,9 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
   const [index, setIndex] = useState(currentIndex);
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const currentImage = images[index];
 
@@ -50,13 +53,17 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
-      // deltaY < 0 means scrolling up (zoom in)
-      // deltaY > 0 means scrolling down (zoom out)
-      if (e.deltaY < 0) {
-        setZoom((prev) => Math.min(prev + 0.1, 3));
-      } else {
-        setZoom((prev) => Math.max(prev - 0.1, 0.5));
-      }
+      setZoom((prevZoom) => {
+        const delta = e.deltaY < 0 ? 0.1 : -0.1;
+        const newZoom = Math.min(Math.max(prevZoom + delta, 0.5), 3);
+
+        // If zooming out to 1 or below, reset position
+        if (newZoom <= 1 && prevZoom > 1) {
+          setPosition({ x: 0, y: 0 });
+        }
+
+        return newZoom;
+      });
     };
 
     const viewer = document.getElementById("image-viewer-container");
@@ -79,6 +86,7 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
       setIndex(index - 1);
       setZoom(1);
       setRotation(0);
+      setPosition({ x: 0, y: 0 });
     }
   };
 
@@ -87,6 +95,7 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
       setIndex(index + 1);
       setZoom(1);
       setRotation(0);
+      setPosition({ x: 0, y: 0 });
     }
   };
 
@@ -95,7 +104,14 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
   };
 
   const handleZoomOut = () => {
-    setZoom((prev) => Math.max(prev - 0.25, 0.5));
+    setZoom((prev) => {
+      const newZoom = Math.max(prev - 0.25, 0.5);
+      // Reset position when zooming out to 1 or below
+      if (newZoom <= 1 && prev > 1) {
+        setPosition({ x: 0, y: 0 });
+      }
+      return newZoom;
+    });
   };
 
   const handleRotate = () => {
@@ -122,6 +138,32 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
   const resetView = () => {
     setZoom(1);
     setRotation(0);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoom > 1) {
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+      e.preventDefault();
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging && zoom > 1) {
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
   };
 
   return (
@@ -236,17 +278,34 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
         )}
 
         {/* Image */}
-        <div className="flex h-full w-full items-center justify-center overflow-hidden">
-          <img
-            src={currentImage.imageUrl}
-            alt={currentImage.name}
-            className="max-h-full max-w-full object-contain transition-transform duration-200"
+        <div
+          className="flex h-full w-full items-center justify-center overflow-hidden"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            cursor: zoom > 1 ? (isDragging ? "grabbing" : "grab") : "default",
+          }}
+        >
+          <div
             style={{
-              transform: `scale(${zoom}) rotate(${rotation}deg)`,
-              cursor: zoom > 1 ? "grab" : "default",
+              transform: `translate(${position.x}px, ${position.y}px)`,
+              transition: isDragging ? "none" : "transform 0.2s",
             }}
-            draggable={false}
-          />
+          >
+            <img
+              id="viewer-image"
+              src={currentImage.imageUrl}
+              alt={currentImage.name}
+              className="max-h-full max-w-full object-contain"
+              style={{
+                transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                transformOrigin: "center center",
+              }}
+              draggable={false}
+            />
+          </div>
         </div>
 
         {/* Next Button */}
@@ -275,6 +334,7 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
                   setIndex(idx);
                   setZoom(1);
                   setRotation(0);
+                  setPosition({ x: 0, y: 0 });
                 }}
                 className={`relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border-2 backdrop-blur-sm transition-all ${
                   idx === index
@@ -314,6 +374,9 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
           </div>
           <div>
             <kbd className="rounded bg-white/20 px-2 py-1">Cuộn chuột</kbd> Zoom
+          </div>
+          <div>
+            <kbd className="rounded bg-white/20 px-2 py-1">Giữ chuột trái</kbd> Di chuyển
           </div>
         </div>
       </div>
