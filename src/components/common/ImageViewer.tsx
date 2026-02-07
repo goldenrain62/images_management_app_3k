@@ -289,10 +289,12 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
           }}
         >
           <div
-            className="max-h-full max-w-full flex items-center justify-center"
             style={{
               transform: `translate(${position.x}px, ${position.y}px)`,
               transition: isDragging ? "none" : "transform 0.2s",
+              display: "inline-block",
+              maxHeight: "100%",
+              maxWidth: "100%",
             }}
           >
             <img
@@ -303,6 +305,7 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
               style={{
                 transform: `scale(${zoom}) rotate(${rotation}deg)`,
                 transformOrigin: "center center",
+                display: "block",
               }}
               draggable={false}
             />
