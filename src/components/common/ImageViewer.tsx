@@ -321,42 +321,9 @@ const ImageViewer = ({ images, currentIndex, onClose }: ImageViewerProps) => {
         )}
       </div>
 
-      {/* Thumbnail Carousel - Bottom */}
-      {images.length > 1 && (
-        <div
-          className="absolute bottom-0 left-0 right-0 z-10 overflow-x-auto px-4 py-3"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-center justify-center gap-2">
-            {images.map((img, idx) => (
-              <button
-                key={img.id}
-                onClick={() => {
-                  setIndex(idx);
-                  setZoom(1);
-                  setRotation(0);
-                  setPosition({ x: 0, y: 0 });
-                }}
-                className={`relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border-2 backdrop-blur-sm transition-all ${
-                  idx === index
-                    ? "border-blue-500 ring-2 ring-blue-500"
-                    : "border-white/30 opacity-60 hover:opacity-100"
-                }`}
-              >
-                <img
-                  src={img.imageUrl}
-                  alt={img.name}
-                  className="h-full w-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Keyboard Shortcuts Helper */}
       <div
-        className="absolute bottom-20 left-4 rounded-lg bg-black/50 px-3 py-2 text-xs text-white backdrop-blur-sm"
+        className="absolute bottom-4 left-4 rounded-lg bg-black/50 px-3 py-2 text-xs text-white backdrop-blur-sm"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="space-y-1">
